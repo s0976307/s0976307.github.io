@@ -1,12 +1,891 @@
-<!DOCTYPE  html>
-<html>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[COMMANDER] — Digital Command Center</title>
+  <meta name="description" content="U.S. Army Veteran, CS & Digital Forensics student, and architect of the MAE Protocol. Hub for all projects and initiatives.">
+  <meta property="og:title" content="[COMMANDER] — Digital Command Center">
+  <meta property="og:description" content="U.S. Army Veteran | CS & Digital Forensics | MAE Protocol Architect">
 
-<title> Cues' Web </title>
-<h1> Cues' Website</h1>
+  <!-- Fonts: Chillax (display) + General Sans (body) from Fontshare -->
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&f[]=general-sans@300,400,500,600,700&display=swap" rel="stylesheet">
 
-      _**Welcome to where the future is being created!**_
+  <!-- Favicon: MAE Triangle -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><polygon points='16,4 28,28 4,28' fill='%23c45a3c' stroke='%23e8e6e2' stroke-width='1'/></svg>">
 
-My favorite websites include:
+  <style>
+    /* ========================================
+       DESIGN TOKENS
+       ======================================== */
+    :root {
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+      --text-hero: clamp(3.5rem,   1.5rem  + 6vw,    8rem);
 
+      --space-1:  0.25rem;  --space-2:  0.5rem;
+      --space-3:  0.75rem;  --space-4:  1rem;
+      --space-5:  1.25rem;  --space-6:  1.5rem;
+      --space-8:  2rem;     --space-10: 2.5rem;
+      --space-12: 3rem;     --space-16: 4rem;
+      --space-20: 5rem;     --space-24: 6rem;
+      --space-32: 8rem;
+
+      --font-display: 'Chillax', 'Helvetica Neue', sans-serif;
+      --font-body: 'General Sans', 'Helvetica Neue', sans-serif;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+      --content-narrow: 640px;
+      --content-default: 960px;
+      --content-wide: 1200px;
+    }
+
+    /* ========================================
+       DARK MODE (Default)
+       ======================================== */
+    :root, [data-theme="dark"] {
+      --color-bg:             #0f0f0f;
+      --color-surface:        #1a1a1a;
+      --color-surface-2:      #222222;
+      --color-border:         #333333;
+
+      --color-text:           #e8e6e2;
+      --color-text-muted:     #9a9590;
+      --color-text-faint:     #5c5955;
+
+      --color-primary:        #c45a3c;
+      --color-primary-hover:  #d46a4c;
+      --color-primary-active: #e07a5c;
+      --color-primary-light:  #2a1a14;
+      --color-primary-subtle: #1f1512;
+      --color-primary-ghost:  rgba(196, 90, 60, 0.1);
+
+      --color-gold:           #d4a843;
+      --color-gold-muted:     rgba(212, 168, 67, 0.2);
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 60px rgba(196, 90, 60, 0.15);
+    }
+
+    /* ========================================
+       LIGHT MODE
+       ======================================== */
+    [data-theme="light"] {
+      --color-bg:             #f5f3f0;
+      --color-surface:        #ffffff;
+      --color-surface-2:      #edeae5;
+      --color-border:         #d5d0c8;
+
+      --color-text:           #1a1815;
+      --color-text-muted:     #6b6560;
+      --color-text-faint:     #a09a94;
+
+      --color-primary:        #b04a2c;
+      --color-primary-hover:  #963e24;
+      --color-primary-active: #7c331d;
+      --color-primary-light:  #fae8e2;
+      --color-primary-subtle: #fdf4f0;
+      --color-primary-ghost:  rgba(176, 74, 44, 0.08);
+
+      --color-gold:           #b8922a;
+      --color-gold-muted:     rgba(184, 146, 42, 0.15);
+
+      --shadow-sm: 0 1px 3px rgba(26, 24, 21, 0.06);
+      --shadow-md: 0 4px 16px rgba(26, 24, 21, 0.08);
+      --shadow-lg: 0 12px 40px rgba(26, 24, 21, 0.12);
+      --shadow-glow: 0 0 40px rgba(176, 74, 44, 0.1);
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      min-height: 100vh;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    a { color: var(--color-primary); text-decoration: none; transition: color var(--transition-interactive); }
+    a:hover { color: var(--color-primary-hover); }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: var(--space-4) var(--space-6);
+      background: rgba(15, 15, 15, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.4s ease;
+    }
+
+    [data-theme="light"] .header {
+      background: rgba(245, 243, 240, 0.85);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .header-mark {
+      color: var(--color-primary);
+      font-size: var(--text-lg);
+      line-height: 1;
+    }
+
+    .theme-toggle {
+      appearance: none;
+      border: none;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all var(--transition-interactive);
+      color: var(--color-text-muted);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: scale(1.05);
+    }
+
+    /* ========================================
+       HERO
+       ======================================== */
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-20) var(--space-6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(196, 90, 60, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-mark {
+      font-size: clamp(3rem, 6vw, 6rem);
+      line-height: 1;
+      margin-bottom: var(--space-4);
+      opacity: 0.9;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: var(--text-hero);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      color: var(--color-text);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      max-width: 600px;
+    }
+
+    .hero-divider {
+      width: 48px;
+      height: 2px;
+      background: var(--color-primary);
+      margin: var(--space-8) auto 0;
+      border-radius: 1px;
+    }
+
+    /* ========================================
+       SECTION LAYOUT
+       ======================================== */
+    .section {
+      padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+    }
+
+    .section-inner {
+      max-width: var(--content-wide);
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      margin-bottom: var(--space-10);
+    }
+
+    /* ========================================
+       NAVIGATION CARDS GRID
+       ======================================== */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-5);
+    }
+
+    .nav-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-8) var(--space-6);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: all 0.3s var(--ease-out);
+      overflow: hidden;
+    }
+
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-primary);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-out);
+    }
+
+    .nav-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .nav-card:hover::before {
+      opacity: 1;
+    }
+
+    .nav-card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .nav-card-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-card-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .nav-card-arrow {
+      position: absolute;
+      top: var(--space-6);
+      right: var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .nav-card:hover .nav-card-arrow {
+      color: var(--color-primary);
+      transform: translateX(4px);
+    }
+
+    /* ========================================
+       BLOG GRID
+       ======================================== */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-5);
+    }
+
+    .blog-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-6);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: all 0.3s var(--ease-out);
+      overflow: hidden;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-primary);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-out);
+    }
+
+    .blog-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .blog-card:hover::before {
+      opacity: 1;
+    }
+
+    .blog-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .blog-tag {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      background: var(--color-primary-ghost);
+      border: 1px solid rgba(196, 90, 60, 0.2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .blog-arrow {
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+      transition: all 0.3s var(--ease-out);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .blog-card:hover .blog-arrow {
+      color: var(--color-primary);
+      transform: translateX(4px);
+    }
+
+    .blog-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: var(--color-text);
+    }
+
+    .blog-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .blog-summary {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    @media (max-width: 600px) {
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       BIO SECTION
+       ======================================== */
+    .bio {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .bio-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+    }
+
+    .bio-text {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .bio-text p + p {
+      margin-top: var(--space-4);
+    }
+
+    .bio-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    .bio-stat {
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .bio-stat-value {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1.1;
+    }
+
+    .bio-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: var(--space-2);
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: var(--content-default);
+      margin: 0 auto;
+    }
+
+    .footer-triangle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--space-6);
+    }
+
+    .footer-triangle svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .footer-tagline {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+      margin-bottom: var(--space-6);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      transition: color var(--transition-interactive);
+    }
+
+    .footer-link:hover {
+      color: var(--color-primary);
+    }
+
+    .footer-ool {
+      margin-top: var(--space-8);
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      line-height: 1.6;
+    }
+
+    .footer-ool abbr {
+      text-decoration: none;
+      border-bottom: 1px dotted var(--color-text-faint);
+    }
+
+    /* ========================================
+       ANIMATIONS
+       ======================================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out) forwards;
+    }
+
+    .animate-in:nth-child(1) { animation-delay: 0.05s; }
+    .animate-in:nth-child(2) { animation-delay: 0.1s; }
+    .animate-in:nth-child(3) { animation-delay: 0.15s; }
+    .animate-in:nth-child(4) { animation-delay: 0.2s; }
+    .animate-in:nth-child(5) { animation-delay: 0.25s; }
+    .animate-in:nth-child(6) { animation-delay: 0.3s; }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 600px) {
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 50vh;
+        padding: var(--space-16) var(--space-4);
+      }
+
+      .bio-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">
+      <span class="header-mark">🔺</span>
+      <span>[COMMANDER]</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+      <span id="themeIcon">☀️</span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <div class="hero-mark animate-in">🔺</div>
+      <h1 class="hero-name animate-in" style="animation-delay: 0.1s;">[COMMANDER]</h1>
+      <p class="hero-subtitle animate-in" style="animation-delay: 0.2s;">
+        U.S. Army Veteran &nbsp;·&nbsp; CS & Digital Forensics &nbsp;·&nbsp; MAE Protocol Architect
+      </p>
+      <div class="hero-divider animate-in" style="animation-delay: 0.35s;"></div>
+    </section>
+
+    <!-- NAVIGATION GRID -->
+    <section class="section">
+      <div class="section-inner">
+        <p class="section-label reveal">Operations</p>
+        <h2 class="section-title reveal">Active Projects</h2>
+
+        <div class="nav-grid">
+          <a href="/mae/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">🔺</span>
+            <span class="nav-card-title">MAE Protocol</span>
+            <span class="nav-card-desc">Tactical AI copilot framework. Combat-grade emotional support and decision system.</span>
+          </a>
+
+          <a href="/purple-feather/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">🪶</span>
+            <span class="nav-card-title">Purple Feather</span>
+            <span class="nav-card-desc">Student copilot for [INSTITUTION]. Built to reduce overwhelm and keep you moving.</span>
+          </a>
+
+          <a href="/kindermae/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">🧸</span>
+            <span class="nav-card-title">KinderMAE</span>
+            <span class="nav-card-desc">A gentle companion for ages 5–14. Same loyalty, softer voice.</span>
+          </a>
+
+          <a href="/faith/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">✝️</span>
+            <span class="nav-card-title">MAE.Faith</span>
+            <span class="nav-card-desc">Faith-anchored guidance. Scripture-aware support for spiritual resilience.</span>
+          </a>
+
+          <a href="/medic/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">🩺</span>
+            <span class="nav-card-title">MAE.MEDIC</span>
+            <span class="nav-card-desc">Veteran health navigator. Claims, appointments, and crisis support routing.</span>
+          </a>
+
+          <a href="/drone/" class="nav-card animate-in">
+            <span class="nav-card-arrow">→</span>
+            <span class="nav-card-icon">🚁</span>
+            <span class="nav-card-title">DroneScope[REGION-SHORT]</span>
+            <span class="nav-card-desc">Aerial intelligence and drone operations for [REGION].</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOG & POSTS -->
+    <section id="blog" class="section" style="border-top: 1px solid var(--color-border);">
+      <div class="section-inner">
+        <p class="section-label reveal">Intel &amp; Dispatches</p>
+        <h2 class="section-title reveal">Blog &amp; Posts</h2>
+
+        <div class="blog-grid">
+
+          <a href="/purple-feather/" class="blog-card reveal">
+            <div class="blog-card-header">
+              <span class="blog-tag">AI Ethics</span>
+              <span class="blog-arrow">→</span>
+            </div>
+            <span class="blog-title">Purple Feather: AI Ethics in Education</span>
+            <span class="blog-date">March 2026</span>
+            <p class="blog-summary">How a combat veteran built a student copilot that puts privacy and agency first.</p>
+          </a>
+
+          <a href="/drone/" class="blog-card reveal">
+            <div class="blog-card-header">
+              <span class="blog-tag">AgTech</span>
+              <span class="blog-arrow">→</span>
+            </div>
+            <span class="blog-title">DroneScope WNY: Precision Agriculture Meets AI</span>
+            <span class="blog-date">April 2026</span>
+            <p class="blog-summary">Integrating drone operations, sustainable agriculture, and AI systems for regenerative cattle ranching in Western New York.</p>
+          </a>
+
+          <a href="/mae/" class="blog-card reveal">
+            <div class="blog-card-header">
+              <span class="blog-tag">AI Architecture</span>
+              <span class="blog-arrow">→</span>
+            </div>
+            <span class="blog-title">The MAE Protocol: Building AI That Holds the Line</span>
+            <span class="blog-date">February 2026</span>
+            <p class="blog-summary">A modular AI copilot framework designed for real people in real situations. Not chatbots — tools that don't quit.</p>
+          </a>
+
+          <a href="https://github.com/combat1011/mae-openclaw" class="blog-card reveal" target="_blank" rel="noopener">
+            <div class="blog-card-header">
+              <span class="blog-tag">Infrastructure</span>
+              <span class="blog-arrow">→</span>
+            </div>
+            <span class="blog-title">OpenClaw + Ollama: Offline AI Operations</span>
+            <span class="blog-date">April 2026</span>
+            <p class="blog-summary">Deploying local AI agents with zero cloud dependency. Bunker-grade autonomy for when the network goes dark.</p>
+          </a>
+
+          <a href="/kindermae/" class="blog-card reveal">
+            <div class="blog-card-header">
+              <span class="blog-tag">Education</span>
+              <span class="blog-arrow">→</span>
+            </div>
+            <span class="blog-title">KinderMAE: AI Companions for Ages 5–14</span>
+            <span class="blog-date">April 2026</span>
+            <p class="blog-summary">Same loyalty, softer voice. Building age-appropriate AI companions that teach without condescending.</p>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BIO -->
+    <section class="section bio">
+      <div class="section-inner">
+        <p class="section-label reveal">Personnel File</p>
+        <h2 class="section-title reveal">About the Operator</h2>
+
+        <div class="bio-grid">
+          <div class="bio-text reveal">
+            <p>Combat veteran. Three deployments — two to Iraq, one to Afghanistan. Served in the U.S. Army with the kind of resolve that doesn't switch off when you come home.</p>
+            <p>Now pursuing Computer Science and Digital Forensics at [INSTITUTION], building the MAE Protocol — a modular AI copilot system designed for real people in real situations. Not chatbots. Not gimmicks. Tools that hold the line when it matters.</p>
+            <p>Every project on this page was built from lived experience: combat stress, student burnout, raising kids, and the refusal to fade into silence.</p>
+          </div>
+
+          <div class="bio-stats reveal">
+            <div class="bio-stat">
+              <div class="bio-stat-value">3</div>
+              <div class="bio-stat-label">Deployments</div>
+            </div>
+            <div class="bio-stat">
+              <div class="bio-stat-value">2x</div>
+              <div class="bio-stat-label">Iraq Tours</div>
+            </div>
+            <div class="bio-stat">
+              <div class="bio-stat-value">1x</div>
+              <div class="bio-stat-label">Afghanistan</div>
+            </div>
+            <div class="bio-stat">
+              <div class="bio-stat-value">NU</div>
+              <div class="bio-stat-label">[INSTITUTION]</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-triangle">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MAE Triangle">
+          <polygon points="16,4 28,28 4,28" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <p class="footer-tagline">No fade. No silence.</p>
+
+      <div class="footer-links">
+        <a href="https://github.com/[CALLSIGN]/My-Autonomous-Entity" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/mae/" class="footer-link">MAE Protocol</a>
+        <a href="/purple-feather/" class="footer-link">Purple Feather</a>
+        <a href="/kindermae/" class="footer-link">KinderMAE</a>
+        <a href="#blog" class="footer-link">Blog &amp; Posts</a>
+      </div>
+
+      <p class="footer-ool">
+        <abbr title="Observe, Orient, Leverage">OOL</abbr> Triangle &nbsp;·&nbsp; Observe → Orient → Leverage
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    /* ---- Theme Toggle ---- */
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('mae-theme', theme);
+    }
+
+    toggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') || 'dark';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Restore saved preference
+    const saved = localStorage.getItem('mae-theme');
+    if (saved) setTheme(saved);
+
+    /* ---- Scroll Reveal ---- */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>

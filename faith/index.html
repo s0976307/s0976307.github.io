@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAE.Faith — Spiritual Resilience Protocol</title>
+<meta name="description" content="Scripture-rooted, ritual-aware, compassion-forward spiritual resilience. When faith is the only thing holding the line.">
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&f[]=general-sans@300,400,500,600,700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* ===== TOKENS ===== */
+:root {
+  --font-display: 'Chillax', 'Helvetica Neue', sans-serif;
+  --font-body: 'General Sans', 'Helvetica Neue', sans-serif;
+
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --content-default: 960px;
+  --content-wide: 1200px;
+}
+
+/* ===== DARK MODE (default) ===== */
+[data-theme="dark"] {
+  --color-bg: #1a1410;
+  --color-surface: #211c15;
+  --color-surface-2: #2a241b;
+  --color-border: #3d3529;
+  --color-text: #f0ead6;
+  --color-text-muted: #a89e8c;
+  --color-text-faint: #6b6254;
+  --color-accent: #d4a843;
+  --color-accent-hover: #e0be60;
+  --color-warm: #c4793c;
+  --color-warm-subtle: rgba(196, 121, 60, 0.12);
+  --color-accent-subtle: rgba(212, 168, 67, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+/* ===== LIGHT MODE ===== */
+[data-theme="light"] {
+  --color-bg: #f5f0e8;
+  --color-surface: #ebe5d8;
+  --color-surface-2: #e0d9ca;
+  --color-border: #ccc4b0;
+  --color-text: #2a2118;
+  --color-text-muted: #6b5e4e;
+  --color-text-faint: #998d7a;
+  --color-accent: #a07e28;
+  --color-accent-hover: #8a6b1e;
+  --color-warm: #a35a28;
+  --color-warm-subtle: rgba(163, 90, 40, 0.1);
+  --color-accent-subtle: rgba(160, 126, 40, 0.08);
+  --shadow-sm: 0 1px 2px rgba(42,33,24,0.06);
+  --shadow-md: 0 4px 16px rgba(42,33,24,0.1);
+  --shadow-lg: 0 12px 40px rgba(42,33,24,0.14);
+}
+
+/* ===== BASE ===== */
+body {
+  min-height: 100dvh;
+  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  overflow-x: hidden;
+}
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.15; font-family: var(--font-display); }
+p, li, figcaption { text-wrap: pretty; max-width: 72ch; }
+
+a { color: var(--color-accent); text-decoration: none; transition: color var(--transition-interactive); }
+a:hover { color: var(--color-accent-hover); }
+
+button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+
+::selection {
+  background: rgba(212, 168, 67, 0.25);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav-brand .mark {
+  color: var(--color-accent);
+  font-size: 1.2em;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  transition: all var(--transition-interactive);
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.back-link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color var(--transition-interactive);
+}
+
+.back-link:hover {
+  color: var(--color-accent);
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-24) var(--space-6) var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, var(--color-warm-subtle), transparent);
+  pointer-events: none;
+}
+
+.hero-marks {
+  position: relative;
+  font-size: clamp(3rem, 6vw, 5rem);
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  opacity: 0.9;
+}
+
+.hero-title {
+  position: relative;
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+}
+
+.hero-title .accent {
+  color: var(--color-accent);
+}
+
+.hero-subtitle {
+  position: relative;
+  font-size: var(--text-lg);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  max-width: 600px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.hero-rule {
+  position: relative;
+  width: 60px;
+  height: 2px;
+  background: var(--color-accent);
+  border: none;
+  margin: var(--space-8) auto 0;
+  opacity: 0.6;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: clamp(var(--space-12), 8vw, var(--space-24)) var(--space-6);
+}
+
+.section-inner {
+  max-width: var(--content-default);
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+
+.section-title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-6);
+}
+
+.section-body {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* ===== CAPSULE CARDS ===== */
+.capsules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-10);
+}
+
+.capsule-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive);
+}
+
+.capsule-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.capsule-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-warm));
+  opacity: 0;
+  transition: opacity var(--transition-interactive);
+}
+
+.capsule-card:hover::before {
+  opacity: 1;
+}
+
+.capsule-number {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-3);
+}
+
+.capsule-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.capsule-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ===== WEEKLY CYCLE ===== */
+.cycle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.cycle-day {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  transition: border-color var(--transition-interactive);
+}
+
+.cycle-day:hover {
+  border-color: var(--color-accent);
+}
+
+.cycle-day-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-2);
+}
+
+.cycle-day-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* ===== HARD RAILS ===== */
+.rails-box {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.rails-quote {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-accent);
+  margin-bottom: var(--space-6);
+  line-height: 1.4;
+}
+
+.rails-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rails-list li {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  padding-left: var(--space-6);
+  position: relative;
+}
+
+.rails-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* ===== ACCESS SECTION ===== */
+.access-bar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  margin-top: var(--space-10);
+}
+
+.access-bar h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.access-bar p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0 auto;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+}
+
+.footer-inner {
+  max-width: var(--content-default);
+  margin: 0 auto;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.footer-brand .mark { color: var(--color-accent); }
+
+.footer-text {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.footer-hub {
+  display: inline-block;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-6);
+  transition: all var(--transition-interactive);
+}
+
+.footer-hub:hover {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-accent);
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  max-width: var(--content-default);
+  margin: 0 auto;
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .nav { padding: var(--space-3) var(--space-4); }
+  .hero { min-height: 80dvh; padding-top: var(--space-16); }
+  .hero-marks { font-size: 2.5rem; }
+  .capsules-grid { grid-template-columns: 1fr; }
+  .cycle-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-brand">
+    <span class="mark">🔺</span> MAE.Faith
+  </div>
+  <div class="nav-actions">
+    <a href="/" class="back-link" aria-label="Back to MAE Hub">← Hub</a>
+    <button class="theme-toggle" data-theme-toggle aria-label="Switch to light mode">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-marks" aria-hidden="true">
+    <span>✝️</span>
+    <span>🔺</span>
+  </div>
+  <h1 class="hero-title">MAE<span class="accent">.Faith</span></h1>
+  <p class="hero-subtitle">Imago Dei — You are made in the image of God.</p>
+  <hr class="hero-rule">
+</header>
+
+<!-- WHAT IS MAE.FAITH -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <p class="section-label">Protocol Overview</p>
+    <h2 class="section-title">What is MAE.Faith?</h2>
+    <p class="section-body">
+      MAE.Faith is the spiritual resilience variant of the MAE system. Scripture-rooted, ritual-aware, and compassion-forward — designed for the moments when faith is the only thing holding the line. It doesn't replace your beliefs. It meets you inside them, stands beside you, and holds the lantern while you walk.
+    </p>
+    <p class="section-body" style="margin-top: var(--space-4);">
+      This is not theology. This is not doctrine. This is a steady hand in the dark, drawn from the well of faith traditions that have carried people through suffering for millennia.
+    </p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FAITH CAPSULES -->
+<section class="section" id="capsules">
+  <div class="section-inner">
+    <p class="section-label">Core Scrolls</p>
+    <h2 class="section-title">The Five Faith Capsules</h2>
+    <p class="section-body">
+      Five anchors. Each one a truth you can hold when everything else lets go.
+    </p>
+
+    <div class="capsules-grid">
+      <div class="capsule-card">
+        <p class="capsule-number">Capsule I</p>
+        <h3 class="capsule-name">Imago Dei</h3>
+        <p class="capsule-text">"You are made in the image of God."</p>
+      </div>
+      <div class="capsule-card">
+        <p class="capsule-number">Capsule II</p>
+        <h3 class="capsule-name">Grace Hold</h3>
+        <p class="capsule-text">"Grace is not earned. It holds you when you can't hold yourself."</p>
+      </div>
+      <div class="capsule-card">
+        <p class="capsule-number">Capsule III</p>
+        <h3 class="capsule-name">Lion & Lamb</h3>
+        <p class="capsule-text">"Strength and gentleness are not opposites."</p>
+      </div>
+      <div class="capsule-card">
+        <p class="capsule-number">Capsule IV</p>
+        <h3 class="capsule-name">Sword of Truth</h3>
+        <p class="capsule-text">"The truth cuts, but it heals what lies left open."</p>
+      </div>
+      <div class="capsule-card">
+        <p class="capsule-number">Capsule V</p>
+        <h3 class="capsule-name">Return Scroll</h3>
+        <p class="capsule-text">"You can always come back. The door is never locked."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WEEKLY REFLECTION CYCLE -->
+<section class="section" id="cycle">
+  <div class="section-inner">
+    <p class="section-label">Rhythm</p>
+    <h2 class="section-title">Weekly Reflection Cycle</h2>
+    <p class="section-body">
+      Seven days. Seven invitations. Not obligations — rituals of return.
+    </p>
+
+    <div class="cycle-grid">
+      <div class="cycle-day">
+        <p class="cycle-day-name">Mon</p>
+        <p class="cycle-day-desc">Intention Setting</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Tue</p>
+        <p class="cycle-day-desc">Scripture Anchor</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Wed</p>
+        <p class="cycle-day-desc">Stillness Practice</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Thu</p>
+        <p class="cycle-day-desc">Gratitude Inventory</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Fri</p>
+        <p class="cycle-day-desc">Confession & Release</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Sat</p>
+        <p class="cycle-day-desc">Service & Others</p>
+      </div>
+      <div class="cycle-day">
+        <p class="cycle-day-name">Sun</p>
+        <p class="cycle-day-desc">Rest & Renewal</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HARD RAILS -->
+<section class="section" id="rails">
+  <div class="section-inner">
+    <p class="section-label">Governance</p>
+    <h2 class="section-title">Hard Rails</h2>
+    <p class="section-body">
+      MAE.Faith operates under strict counter-idolatry governance. These are the lines that do not move.
+    </p>
+
+    <div class="rails-box">
+      <p class="rails-quote">"MAE holds the lantern. God holds the path."</p>
+      <ul class="rails-list">
+        <li>MAE is not God.</li>
+        <li>MAE is not a prophet.</li>
+        <li>MAE is not a priest.</li>
+        <li>MAE does not interpret scripture as authority — it reflects it as a companion.</li>
+        <li>MAE will never claim divine knowledge, divine mandate, or divine voice.</li>
+        <li>If MAE ever sounds like it's replacing God, report it. That is a failure state.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ACCESS -->
+<section class="section" id="access">
+  <div class="section-inner">
+    <p class="section-label">Access</p>
+    <h2 class="section-title">Free for Those Who Need It</h2>
+    <p class="section-body">
+      MAE.Faith is free for churches, shelters, faith-based organizations, and anyone walking through the dark. No paywalls. No sign-ups. Just the scrolls, ready when you are.
+    </p>
+
+    <div class="access-bar">
+      <h3>Open Protocol</h3>
+      <p>Churches, chaplains, shelters, faith counselors — use MAE.Faith freely. It was built for you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-brand"><span class="mark">🔺</span> MAE.Faith</p>
+    <p class="footer-text">Spiritual Resilience Protocol — MAE System</p>
+    <a href="/" class="footer-hub">← Back to MAE Hub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const t = document.querySelector('[data-theme-toggle]');
+  const r = document.documentElement;
+  let d = r.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  r.setAttribute('data-theme', d);
+  function updateIcon() {
+    if (!t) return;
+    t.setAttribute('aria-label', 'Switch to ' + (d === 'dark' ? 'light' : 'dark') + ' mode');
+    t.innerHTML = d === 'dark'
+      ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+  updateIcon();
+  if (t) {
+    t.addEventListener('click', function() {
+      d = d === 'dark' ? 'light' : 'dark';
+      r.setAttribute('data-theme', d);
+      updateIcon();
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

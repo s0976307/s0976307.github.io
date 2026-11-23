@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAE: Purple Feather — Student Copilot</title>
+  <meta name="description" content="A student copilot for [BASE-CITY] and [INSTITUTION] — built to reduce overwhelm, keep you moving, and have your back. Includes NYS student resources: TAP, Excelsior, VTA, tenant rights, labor law, SNAP, and mental health parity.">
+  <meta property="og:title" content="MAE: Purple Feather — Your Wing Support">
+  <meta property="og:description" content="A student copilot for [BASE-CITY] and [INSTITUTION] — built to reduce overwhelm, keep you moving, and have your back.">
+
+  <!-- Fonts: Chillax (display) + General Sans (body) from Fontshare -->
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&f[]=general-sans@300,400,500,600,700&display=swap" rel="stylesheet">
+
+  <!-- Favicon: inline SVG data URI -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2C14 8 10 14 6 18c4-1 8-1 10 0 0-4 2-10 4-14l2 12c2-1 5 0 7 1-5-4-9-10-13-15z' fill='%237a39bb'/></svg>">
+
+  <style>
+    /* ========================================
+       DESIGN TOKENS
+       ======================================== */
+    :root {
+      /* Type Scale (fluid) */
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+
+      /* Spacing (4px base) */
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      --space-32: 8rem;
+
+      /* Fonts */
+      --font-display: 'Chillax', 'Helvetica Neue', sans-serif;
+      --font-body: 'General Sans', 'Helvetica Neue', sans-serif;
+
+      /* Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* Content widths */
+      --content-narrow: 640px;
+      --content-default: 960px;
+      --content-wide: 1200px;
+    }
+
+    /* ========================================
+       LIGHT MODE (Default)
+       ======================================== */
+    :root, [data-theme="light"] {
+      /* Surfaces — warm neutral */
+      --color-bg:             #faf9f6;
+      --color-surface:        #ffffff;
+      --color-surface-2:      #f5f3ef;
+      --color-border:         #e0dcd5;
+
+      /* Text */
+      --color-text:           #2b2735;
+      --color-text-muted:     #6b6578;
+      --color-text-faint:     #a09aad;
+
+      /* Primary — Purple Feather */
+      --color-primary:        #7a39bb;
+      --color-primary-hover:  #6428a6;
+      --color-primary-active: #4f1d87;
+      --color-primary-light:  #efe4fb;
+      --color-primary-subtle: #f6f0fd;
+      --color-primary-ghost:  rgba(122, 57, 187, 0.08);
+
+      /* Semantic */
+      --color-success:        #437a22;
+      --color-warning:        #b5651d;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(43, 39, 53, 0.06);
+      --shadow-md: 0 4px 16px rgba(43, 39, 53, 0.08);
+      --shadow-lg: 0 12px 40px rgba(43, 39, 53, 0.12);
+      --shadow-glow: 0 0 40px rgba(122, 57, 187, 0.15);
+    }
+
+    /* ========================================
+       DARK MODE
+       ======================================== */
+    [data-theme="dark"] {
+      --color-bg:             #13111a;
+      --color-surface:        #1c1926;
+      --color-surface-2:      #231f30;
+      --color-border:         #342e44;
+
+      --color-text:           #e0dce6;
+      --color-text-muted:     #9a93a8;
+      --color-text-faint:     #5c566b;
+
+      --color-primary:        #a86fdf;
+      --color-primary-hover:  #b984e8;
+      --color-primary-active: #c9a0f0;
+      --color-primary-light:  #2a1f3d;
+      --color-primary-subtle: #1f1a2d;
+      --color-primary-ghost:  rgba(168, 111, 223, 0.1);
+
+      --color-success:        #6daa45;
+      --color-warning:        #d4873a;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 60px rgba(168, 111, 223, 0.2);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --color-bg:             #13111a;
+        --color-surface:        #1c1926;
+        --color-surface-2:      #231f30;
+        --color-border:         #342e44;
+        --color-text:           #e0dce6;
+        --color-text-muted:     #9a93a8;
+        --color-text-faint:     #5c566b;
+        --color-primary:        #a86fdf;
+        --color-primary-hover:  #b984e8;
+        --color-primary-active: #c9a0f0;
+        --color-primary-light:  #2a1f3d;
+        --color-primary-subtle: #1f1a2d;
+        --color-primary-ghost:  rgba(168, 111, 223, 0.1);
+        --color-success:        #6daa45;
+        --color-warning:        #d4873a;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 60px rgba(168, 111, 223, 0.2);
+      }
+    }
+
+    /* ========================================
+       BASE RESET
+       ======================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--space-20);
+    }
+
+    body {
+      min-height: 100dvh;
+      line-height: 1.6;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+    h1, h2, h3, h4 { text-wrap: balance; line-height: 1.2; font-family: var(--font-display); }
+    p, li, figcaption { text-wrap: pretty; max-width: 72ch; }
+
+    ::selection {
+      background: var(--color-primary-light);
+      color: var(--color-text);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+
+    a, button, [role="button"] {
+      transition: color var(--transition-interactive),
+                  background var(--transition-interactive),
+                  border-color var(--transition-interactive),
+                  box-shadow var(--transition-interactive),
+                  transform var(--transition-interactive);
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+    }
+
+    /* ========================================
+       LAYOUT
+       ======================================== */
+    .container {
+      width: 100%;
+      max-width: var(--content-wide);
+      margin: 0 auto;
+      padding-inline: var(--space-6);
+    }
+
+    @media (max-width: 640px) {
+      .container { padding-inline: var(--space-4); }
+    }
+
+    section {
+      padding-block: clamp(var(--space-16), 8vw, var(--space-32));
+    }
+
+    /* ========================================
+       HEADER / NAV
+       ======================================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .header.scrolled {
+      border-bottom-color: var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: var(--space-3);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: var(--color-text);
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-primary);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      color: var(--color-text-muted);
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-primary-ghost);
+      color: var(--color-primary);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* ========================================
+       HERO SECTION
+       ======================================== */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, var(--color-primary-ghost) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+    }
+
+    .hero-logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto var(--space-8);
+      filter: drop-shadow(0 4px 20px rgba(122, 57, 187, 0.25));
+    }
+
+    .hero h1 {
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+      background: linear-gradient(135deg, var(--color-primary) 0%, #b06de8 50%, var(--color-primary) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 500;
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      max-width: 560px;
+      margin: 0 auto var(--space-8);
+      line-height: 1.7;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-8);
+      background: var(--color-primary);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(122, 57, 187, 0.3);
+    }
+
+    .cta-btn:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(122, 57, 187, 0.4);
+    }
+
+    .cta-btn:active {
+      transform: translateY(0);
+    }
+
+    .cta-btn svg {
+      width: 16px;
+      height: 16px;
+      display: inline;
+    }
+
+    /* ========================================
+       SECTION HEADERS (shared)
+       ======================================== */
+    .section-label {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .section-title {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+    }
+
+    .section-subtitle {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: clamp(var(--space-10), 4vw, var(--space-16));
+    }
+
+    .section-header .section-subtitle {
+      margin-inline: auto;
+    }
+
+    /* ========================================
+       FEATURES — WHAT IT DOES
+       ======================================== */
+    .features {
+      background: var(--color-surface-2);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow var(--transition-interactive),
+                  border-color var(--transition-interactive);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), #b06de8);
+      opacity: 0;
+      transition: opacity var(--transition-interactive);
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-lg);
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-5);
+      color: var(--color-primary);
+    }
+
+    .feature-name {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-2);
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .feature-desc {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      font-size: var(--text-base);
+    }
+
+    /* ========================================
+       HOW IT WORKS
+       ======================================== */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+      counter-reset: step;
+    }
+
+    @media (max-width: 768px) {
+      .steps-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+    }
+
+    .step-card {
+      text-align: center;
+      counter-increment: step;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--text-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-5);
+      border: 2px solid var(--color-primary-ghost);
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .step-desc {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* Connector lines between steps */
+    @media (min-width: 769px) {
+      .steps-grid {
+        position: relative;
+      }
+      .step-card { position: relative; }
+      .step-card:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 28px;
+        right: calc(-1 * var(--space-4));
+        width: var(--space-8);
+        height: 2px;
+        background: var(--color-border);
+        transform: translateX(50%);
+      }
+    }
+
+    /* ========================================
+       GOLD CODES
+       ======================================== */
+    .gold-codes {
+      background: var(--color-surface-2);
+    }
+
+    .gold-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 900px) {
+      .gold-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 540px) {
+      .gold-grid { grid-template-columns: 1fr; }
+    }
+
+    .gold-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      transition: box-shadow var(--transition-interactive),
+                  transform var(--transition-interactive),
+                  border-color var(--transition-interactive);
+    }
+
+    .gold-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary);
+    }
+
+    .gold-code-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .gold-code-name::before {
+      content: '⌘';
+      font-size: 0.8em;
+      opacity: 0.6;
+    }
+
+    .gold-card p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       FINE PRINT
+       ======================================== */
+    .fine-print {
+      background: var(--color-bg);
+    }
+
+    .fine-print-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .fine-print-block {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      margin-bottom: var(--space-6);
+    }
+
+    .fine-print-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .fine-print-block p {
+      color: var(--color-text-muted);
+      line-height: 1.8;
+      margin: 0 auto;
+    }
+
+    .fine-print-block p strong {
+      color: var(--color-text);
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding-block: var(--space-10);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .footer-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .footer-info p {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+
+    .footer-info a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-info a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .footer-version {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+      .footer-info { align-items: center; }
+    }
+
+    /* ========================================
+       SCROLL ANIMATIONS
+       ======================================== */
+    .fade-in {
+      opacity: 1;
+    }
+
+    @supports (animation-timeline: scroll()) {
+      .fade-in {
+        opacity: 0;
+        animation: reveal-fade linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 100%;
+      }
+    }
+
+    @keyframes reveal-fade {
+      to { opacity: 1; }
+    }
+
+    /* JS fallback for IntersectionObserver */
+    .js-reveal {
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .js-reveal.revealed {
+      opacity: 1;
+    }
+
+    /* Stagger children */
+    .js-reveal.stagger-1 { transition-delay: 0.05s; }
+    .js-reveal.stagger-2 { transition-delay: 0.1s; }
+    .js-reveal.stagger-3 { transition-delay: 0.15s; }
+    .js-reveal.stagger-4 { transition-delay: 0.2s; }
+    .js-reveal.stagger-5 { transition-delay: 0.25s; }
+    .js-reveal.stagger-6 { transition-delay: 0.3s; }
+
+    /* Ensure content visible when animations don't run */
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in, .js-reveal { opacity: 1 !important; transition: none !important; animation: none !important; }
+    }
+    noscript ~ * .js-reveal, noscript ~ * .fade-in { opacity: 1 !important; }
+
+    /* ========================================
+       DECORATIVE ELEMENTS
+       ======================================== */
+    .feather-float {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      opacity: 0.08;
+      pointer-events: none;
+      color: var(--color-primary);
+    }
+
+    /* Subtle grid background for hero */
+    .hero-bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--color-border) 1px, transparent 0);
+      background-size: 40px 40px;
+      opacity: 0.3;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    /* ========================================
+       TRY PURPLE FEATHER CTA
+       ======================================== */
+    .try-cta {
+      background: var(--color-surface-2);
+      text-align: center;
+    }
+
+    .try-cta .section-title {
+      margin-bottom: var(--space-3);
+    }
+
+    .try-cta .section-subtitle {
+      margin-inline: auto;
+      margin-bottom: var(--space-8);
+    }
+
+    .cta-btn-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-12);
+      background: var(--color-primary);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-lg);
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      box-shadow: 0 6px 28px rgba(122, 57, 187, 0.35);
+    }
+
+    .cta-btn-lg:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(122, 57, 187, 0.45);
+    }
+
+    .cta-btn-lg:active {
+      transform: translateY(0);
+    }
+
+    .try-hint {
+      margin-top: var(--space-5);
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+    }
+
+    /* ========================================
+       ARCHITECTURE
+       ======================================== */
+    .architecture-img {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .architecture-caption {
+      text-align: center;
+      margin-top: var(--space-5);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      max-width: 640px;
+      margin-inline: auto;
+      line-height: 1.7;
+    }
+
+    /* ========================================
+       DOCUMENTATION / RESOURCES
+       ======================================== */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 768px) {
+      .docs-grid { grid-template-columns: 1fr; }
+    }
+
+    .doc-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition-interactive),
+                  border-color var(--transition-interactive);
+    }
+
+    .doc-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .doc-card-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .doc-card-desc {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      font-size: var(--text-base);
+      margin-bottom: var(--space-5);
+      flex: 1;
+    }
+
+    .doc-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    .doc-card-link:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    .doc-card-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Footer links row */
+    .footer-links {
+      display: flex;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========================================
+       STUDENT DISPATCHES — BLOG SECTION
+       ======================================== */
+    .blog-section {
+      background: var(--color-bg);
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 1024px) {
+      .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .blog-grid { grid-template-columns: 1fr; }
+    }
+
+    .blog-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-7, 1.75rem) var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      position: relative;
+      overflow: hidden;
+      transition:
+        box-shadow var(--transition-interactive),
+        border-color var(--transition-interactive),
+        transform var(--transition-interactive);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), #b06de8);
+      opacity: 0;
+      transition: opacity var(--transition-interactive);
+    }
+
+    .blog-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .blog-card:hover::before {
+      opacity: 1;
+    }
+
+    .blog-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .blog-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-1) var(--space-3);
+      background: var(--color-primary-ghost);
+      color: var(--color-primary);
+      border: 1px solid rgba(122, 57, 187, 0.15);
+      border-radius: var(--radius-full);
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .blog-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      font-family: var(--font-display);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .blog-card-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--color-text);
+      margin-top: var(--space-1);
+    }
+
+    .blog-card-summary {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .blog-card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-top: var(--space-2);
+      transition: gap var(--transition-interactive), color var(--transition-interactive);
+    }
+
+    .blog-card:hover .blog-card-arrow {
+      gap: var(--space-3);
+      color: var(--color-primary-hover);
+    }
+
+    .blog-card-arrow svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      transition: transform var(--transition-interactive);
+    }
+
+    .blog-card:hover .blog-card-arrow svg {
+      transform: translateX(3px);
+    }
+
+    /* Featured first card spans 2 columns on large screens */
+    @media (min-width: 1025px) {
+      .blog-card--featured {
+        grid-column: span 2;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: var(--space-8);
+      }
+
+      .blog-card--featured .blog-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: var(--space-3);
+      }
+
+      .blog-card--featured .blog-card-title {
+        font-size: var(--text-xl);
+      }
+
+      .blog-card--featured .blog-card-eyebrow {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        min-width: 160px;
+        padding-top: var(--space-1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="#" class="logo-group" aria-label="Purple Feather home">
+        <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 4C22 10 17 18 10 26c0 0 6-2 11 0 0-5 1.5-12.5 4-18l3 16c3-2 7-1 10 0C32 18 28 10 24 4z" fill="var(--color-primary)" opacity="0.9"/>
+          <path d="M21 26c0-5 1.5-12.5 4-18" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          <path d="M24 8c-1 4-3.5 9.5-7 14.5" stroke="var(--color-primary)" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+          <path d="M25 10c1 4 2.5 8.5 3 14" stroke="var(--color-primary)" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+        </svg>
+        <span class="logo-text">Purple Feather</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links" role="list">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#gold-codes">Gold Codes</a></li>
+          <li><a href="#try-it">Try It</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#nys-resources">NYS Resources</a></li>
+          <li><a href="#dispatches">Dispatches</a></li>
+        </ul>
+      </nav>
+
+      <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-content container">
+      <svg class="hero-logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Purple Feather logo">
+        <!-- Main feather shape -->
+        <path d="M60 8C55 22 45 40 28 58c0 0 14-4 26 1 0-12 3-30 8-42l8 38c7-4 16-3 24 0C82 42 70 22 60 8z"
+              fill="var(--color-primary)" opacity="0.85"/>
+        <!-- Feather spine -->
+        <path d="M54 59C54.5 46 57 28 62 12" stroke="var(--color-bg)" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+        <!-- Left barbs -->
+        <path d="M60 16C56 28 48 40 38 50" stroke="var(--color-bg)" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
+        <path d="M58 24C52 34 44 44 34 54" stroke="var(--color-bg)" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+        <!-- Right barbs -->
+        <path d="M62 18C64 28 67 38 70 48" stroke="var(--color-bg)" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
+        <path d="M64 26C67 34 71 42 76 50" stroke="var(--color-bg)" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+        <!-- Subtle glow ring -->
+        <circle cx="60" cy="60" r="52" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.12"/>
+        <!-- Lower quill -->
+        <path d="M54 59C55 72 56.5 84 58 98" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+        <path d="M58 98C58.5 104 59 108 60 112" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+      </svg>
+
+      <h1>MAE: Purple Feather</h1>
+      <p class="hero-tagline">Your wing support. You fly the mission.</p>
+      <p class="hero-subtitle">A student copilot for [BASE-LOCATION] and [INSTITUTION] — built to reduce overwhelm, keep you moving, and have your back.</p>
+      <a href="#how-it-works" class="cta-btn">
+        Get Started
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== WHAT IT DOES ===== -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Modules</p>
+        <h2 class="section-title js-reveal">What Purple Feather Does</h2>
+        <p class="section-subtitle js-reveal">Four modules, one mission — keep you moving without doing the work for you.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card js-reveal stagger-1">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+              <path d="M8 7h8M8 11h5"/>
+            </svg>
+          </div>
+          <p class="feature-name">MAE.ACADEMIC</p>
+          <h3 class="feature-title">Study Smart, Not Harder</h3>
+          <p class="feature-desc">Breaks down assignments, builds study plans, preps you for exams. Guides the process — never does the work for you.</p>
+        </div>
+
+        <div class="feature-card js-reveal stagger-2">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+          </div>
+          <p class="feature-name">MAE.LIFE</p>
+          <h3 class="feature-title">Stay Human While You Grind</h3>
+          <p class="feature-desc">Time management, burnout detection, rest nudges. Keeps you human while you grind.</p>
+        </div>
+
+        <div class="feature-card js-reveal stagger-3">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <p class="feature-name">MAE.LOCAL</p>
+          <h3 class="feature-title">[BASE-CITY] Intel, One Ask Away</h3>
+          <p class="feature-desc">Knows [BASE-CITY] inside out. Food pantries, transit routes, mental health, the public library, jobs — real resources with real addresses.</p>
+        </div>
+
+        <div class="feature-card js-reveal stagger-4">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <p class="feature-name">MAE.DEFEND-LITE</p>
+          <h3 class="feature-title">Scam Shield Engaged</h3>
+          <p class="feature-desc">Spots phishing, fake job posts, housing scams, and predatory lending before you get burned.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Process</p>
+        <h2 class="section-title js-reveal">Three Steps. That's It.</h2>
+        <p class="section-subtitle js-reveal">No setup, no onboarding wizard. Just talk to PF.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card js-reveal stagger-1">
+          <div class="step-number">1</div>
+          <h3 class="step-title">"Hey Purple Feather"</h3>
+          <p class="step-desc">Start a conversation about what's on your plate. Classes, deadlines, life stuff — whatever's weighing on you.</p>
+        </div>
+
+        <div class="step-card js-reveal stagger-2">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Get a Clear Snapshot</h3>
+          <p class="step-desc">PF breaks down what matters, what's urgent, and what can wait. No noise, just clarity.</p>
+        </div>
+
+        <div class="step-card js-reveal stagger-3">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Take the Next Step</h3>
+          <p class="step-desc">Actionable moves, not theory. You stay in control — PF just makes the path visible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GOLD CODES ===== -->
+  <section class="gold-codes" id="gold-codes">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Quick Commands</p>
+        <h2 class="section-title js-reveal">Gold Codes</h2>
+        <p class="section-subtitle js-reveal">Quick commands for when you need a mode switch.</p>
+      </div>
+
+      <div class="gold-grid">
+        <div class="gold-card js-reveal stagger-1">
+          <p class="gold-code-name">EYES UP</p>
+          <p>Refocus. What's the priority?</p>
+        </div>
+
+        <div class="gold-card js-reveal stagger-2">
+          <p class="gold-code-name">SHOW ME THE MAP</p>
+          <p>Show me everything. Deadlines, tasks, threats.</p>
+        </div>
+
+        <div class="gold-card js-reveal stagger-3">
+          <p class="gold-code-name">KEEP ME MOVING</p>
+          <p>I'm stuck. Push me forward.</p>
+        </div>
+
+        <div class="gold-card js-reveal stagger-4">
+          <p class="gold-code-name">BURN THE BACKLOG</p>
+          <p>Too much. Help me sort and cut.</p>
+        </div>
+
+        <div class="gold-card js-reveal stagger-5">
+          <p class="gold-code-name">DARK SKY</p>
+          <p>I'm stressed. Talk me down.</p>
+        </div>
+
+        <div class="gold-card js-reveal stagger-6">
+          <p class="gold-code-name">BACK IN THE COCKPIT</p>
+          <p>I'm good. Normal mode.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TRY PURPLE FEATHER ===== -->
+  <section class="try-cta" id="try-it">
+    <div class="container">
+      <h2 class="section-title js-reveal">Try Purple Feather Now</h2>
+      <p class="section-subtitle js-reveal">Available as a free ChatGPT Custom GPT — no setup required.</p>
+      <div class="js-reveal">
+        <a href="https://chatgpt.com/g/g-69cabc3745788191958cc80d45db0635-mae-purple-feather" class="cta-btn-lg" target="_blank" rel="noopener">
+          Open in ChatGPT →
+        </a>
+        <p class="try-hint">Start with: "Hey Purple Feather" or any Gold Code</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ARCHITECTURE ===== -->
+  <section id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Architecture</p>
+        <h2 class="section-title js-reveal">Inside the System</h2>
+      </div>
+      <div class="js-reveal">
+        <img src="architecture.jpg" alt="Purple Feather modular architecture diagram" class="architecture-img" loading="lazy">
+        <p class="architecture-caption">Purple Feather's modular architecture — four specialized modules wrapped in hard-limit guardrails.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== [BASE-CITY] RESOURCES ===== -->
+  <section id="[BASE-CITY]-resources" style="background: var(--color-surface-2);">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">[BASE-CITY] Resources</p>
+        <h2 class="section-title js-reveal">Real Resources. Real Addresses.</h2>
+        <p class="section-subtitle js-reveal">MAE.LOCAL knows these by heart — food, transit, mental health, jobs, and more in [BASE-LOCATION].</p>
+      </div>
+
+      <div class="[BASE-CITY]-grid js-reveal" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-4);
+      ">
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">🥫 Salvation Army Food Pantry</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">[REDACTED-ADDRESS], [BASE-CITY]</p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">🏥 NiCAP</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">180 Washburn St, [BASE-CITY]</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><a href="tel:[REDACTED-PHONE]" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">[REDACTED-PHONE]</a></p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">📚 [BASE-CITY] Public Library</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">23 East Ave, [BASE-CITY]</p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">🚌 NFTA Route #44 Bus</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">Buffalo ↔ [BASE-CITY]</p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">🔗 Connect Niagara</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><a href="tel:[REDACTED-PHONE]" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">[REDACTED-PHONE]</a></p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">🧠 [COUNTY] MH Clinic</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><a href="tel:[REDACTED-PHONE]" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">[REDACTED-PHONE]</a></p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">💙 MHANC</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">[REDACTED-ADDRESS], [BASE-CITY]</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><a href="tel:[REDACTED-PHONE]" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">[REDACTED-PHONE]</a></p>
+        </div>
+
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name" style="display: flex; align-items: center; gap: var(--space-2);">💼 WorkSourceOne</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><a href="tel:[REDACTED-PHONE]" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">[REDACTED-PHONE]</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DOCUMENTATION ===== -->
+  <section class="features" id="resources">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Resources</p>
+        <h2 class="section-title js-reveal">Documentation & Research</h2>
+      </div>
+
+      <div class="docs-grid">
+        <div class="doc-card js-reveal stagger-1">
+          <h3 class="doc-card-title">Operational Handbook</h3>
+          <p class="doc-card-desc">Complete guide to using Purple Feather — modules, Gold Codes, campus resources.</p>
+          <a href="#" class="doc-card-link">
+            Read Handbook
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+
+        <div class="doc-card js-reveal stagger-2">
+          <h3 class="doc-card-title">Digital Safety Protocol</h3>
+          <p class="doc-card-desc">DEFEND-LITE module deep dive — phishing, scams, financial literacy, academic integrity.</p>
+          <a href="#" class="doc-card-link">
+            Read Protocol
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+
+        <div class="doc-card js-reveal stagger-3">
+          <h3 class="doc-card-title">Institutional Strategy</h3>
+          <p class="doc-card-desc">Implementation roadmap for deploying persona-anchored AI copilots for student retention.</p>
+          <a href="#" class="doc-card-link">
+            Read Strategy
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+
+        <div class="doc-card js-reveal stagger-4">
+          <h3 class="doc-card-title">Open Source</h3>
+          <p class="doc-card-desc">Full source code, specs, and deployment instructions on GitHub.</p>
+          <a href="https://github.com/[CALLSIGN]/My-Autonomous-Entity" class="doc-card-link" target="_blank" rel="noopener">
+            View on GitHub
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINE PRINT ===== -->
+  <section class="fine-print" id="fine-print">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Boundaries</p>
+        <h2 class="section-title js-reveal">The Fine Print</h2>
+      </div>
+
+      <div class="fine-print-inner">
+        <div class="fine-print-block js-reveal">
+          <p>Purple Feather is <strong>not a therapist, not a professor, not a doctor</strong>. It's a study partner with good pattern recognition. If something is serious, PF will always point you to a real human.</p>
+        </div>
+
+        <div class="fine-print-block js-reveal">
+          <p>Built on the <strong>MAE Protocol</strong> by [COMMANDER]. Academic integrity is non-negotiable — PF will <strong>never write your papers or do your assignments</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STUDENT DISPATCHES ===== -->
+  <section class="blog-section" id="dispatches">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">Student Dispatches</p>
+        <h2 class="section-title js-reveal">Field Notes &amp; Updates</h2>
+      </div>
+
+      <div class="blog-grid">
+
+        <!-- Post 1 — Featured (spans 2 cols on desktop) -->
+        <article class="blog-card blog-card--featured js-reveal stagger-1" tabindex="0">
+          <!-- On desktop, split into eyebrow col + body col -->
+          <div class="blog-card-eyebrow">
+            <div class="blog-card-meta">
+              <span class="blog-tag">AI Ethics</span>
+            </div>
+            <span class="blog-date">March 2026</span>
+          </div>
+          <div class="blog-card-body">
+            <h3 class="blog-card-title">Purple Feather Launch: AI Ethics Presentation</h3>
+            <p class="blog-card-summary">Presenting Purple Feather as an ethical AI copilot to the Niagara University community. Built by students, for students.</p>
+            <span class="blog-card-arrow" aria-label="Read post">
+              Read Post
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </span>
+          </div>
+        </article>
+
+        <!-- Post 2 -->
+        <article class="blog-card js-reveal stagger-2" tabindex="0">
+          <div class="blog-card-meta">
+            <span class="blog-tag">Academic Ops</span>
+            <span class="blog-date">March 2026</span>
+          </div>
+          <h3 class="blog-card-title">Tactical Briefs: Turning Lectures Into Intel</h3>
+          <p class="blog-card-summary">How MAE converts raw lecture content into structured threat/opportunity briefs that actually help you study.</p>
+          <span class="blog-card-arrow" aria-label="Read post">
+            Read Post
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </article>
+
+        <!-- Post 3 -->
+        <article class="blog-card js-reveal stagger-3" tabindex="0">
+          <div class="blog-card-meta">
+            <span class="blog-tag">Mental Health</span>
+            <span class="blog-date">March 2026</span>
+          </div>
+          <h3 class="blog-card-title">Building a Student Support System That Doesn't Quit</h3>
+          <p class="blog-card-summary">Why student copilots need to be more than chatbots — they need to hold the line when burnout hits.</p>
+          <span class="blog-card-arrow" aria-label="Read post">
+            Read Post
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </article>
+
+        <!-- Post 4 -->
+        <article class="blog-card js-reveal stagger-4" tabindex="0">
+          <div class="blog-card-meta">
+            <span class="blog-tag">Veteran Affairs</span>
+            <span class="blog-date">April 2026</span>
+          </div>
+          <h3 class="blog-card-title">From Combat to Campus: Veteran Student Tech</h3>
+          <p class="blog-card-summary">Navigating the transition from military service to higher education with AI-assisted operations planning.</p>
+          <span class="blog-card-arrow" aria-label="Read post">
+            Read Post
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </article>
+
+        <!-- Post 5 -->
+        <article class="blog-card js-reveal stagger-5" tabindex="0">
+          <div class="blog-card-meta">
+            <span class="blog-tag">Infrastructure</span>
+            <span class="blog-date">April 2026</span>
+          </div>
+          <h3 class="blog-card-title">OpenClaw: Taking the Copilot Offline</h3>
+          <p class="blog-card-summary">When credits run out or the network goes dark, the doctrine still stands. Building offline-first student AI.</p>
+          <span class="blog-card-arrow" aria-label="Read post">
+            Read Post
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NYS STUDENT RESOURCES ===== -->
+  <section id="nys-resources" style="background: var(--color-bg);">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label js-reveal">New York State</p>
+        <h2 class="section-title js-reveal">New York State Resources</h2>
+        <p class="section-subtitle js-reveal">Know your rights. Know your options.</p>
+      </div>
+
+      <div class="js-reveal" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-4);
+      ">
+
+        <!-- TAP Grant -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">TAP Grant</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">NYS Tuition Assistance Program — free grant, never repaid. For NYS residents enrolled full-time in a degree program.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Up to $5,665/year</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://www.hesc.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">hesc.ny.gov</a>
+            &nbsp;·&nbsp;
+            <a href="tel:8886974372" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">(888) 697-4372</a>
+          </p>
+        </div>
+
+        <!-- Excelsior Scholarship -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">Excelsior Scholarship</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">Free SUNY/CUNY tuition for families earning ≤$125k/year. Requires full-time enrollment and 30 credits/year.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Income ≤$125,000</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://www.hesc.ny.gov/excelsior" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">hesc.ny.gov/excelsior</a>
+          </p>
+        </div>
+
+        <!-- Veterans Tuition Award -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">Veterans Tuition Award</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">For eligible veterans at SUNY, CUNY, private, or vocational schools in NYS. Covers undergrad and graduate study — not reduced by GI Bill.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Up to $7,070/year</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://www.hesc.ny.gov/vta" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">hesc.ny.gov/vta</a>
+          </p>
+        </div>
+
+        <!-- DREAM Act -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">DREAM Act</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">NYS financial aid (TAP, Excelsior, etc.) for undocumented students, DACA, TPS, T-Visa, and U-Visa holders. Apply via HESC — not FAFSA.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Aid for undocumented students</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://www.hesc.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">HESC portal</a>
+          </p>
+        </div>
+
+        <!-- Minimum Wage 2026 -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">Minimum Wage 2026</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">Effective January 1, 2026. Tip credit applies to food-service workers in rest of state ($10.70 + $5.30 tip).</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <strong style="color: var(--color-text);">$16/hr</strong> — Niagara County &amp; rest of NYS<br>
+            <strong style="color: var(--color-text);">$17/hr</strong> — NYC, Long Island, Westchester
+          </p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://dol.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">dol.ny.gov</a>
+          </p>
+        </div>
+
+        <!-- Tenant Rights -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">Tenant Rights</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">HSTPA 2019 protections. Late fees capped at $50 or 5% of rent. Landlord must try to re-rent if you break a lease early.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            Deposit max <strong style="color: var(--color-text);">1 month</strong> · Return within <strong style="color: var(--color-text);">14 days</strong><br>
+            App fees <strong style="color: var(--color-text);">banned</strong> · Background check capped at $20
+          </p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://ag.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">ag.ny.gov</a>
+            &nbsp;·&nbsp;
+            <a href="tel:8007717755" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">(800) 771-7755</a>
+          </p>
+        </div>
+
+        <!-- SNAP for Students -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">SNAP for Students</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">Students 18–49 in college need an exemption: working 20+ hrs/week, work-study, caring for a child, TANF, disability, or enrolled in a CTE program.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Need exemption to qualify</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://mybenefits.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">myBenefits.ny.gov</a>
+          </p>
+        </div>
+
+        <!-- Mental Health Parity -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">Mental Health Parity</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">Insurers must cover mental health and substance use at parity with medical/surgical benefits. If denied, contact the CHAMP ombudsman.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);"><strong style="color: var(--color-text);">Insurers must cover MH = medical</strong></p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            CHAMP: <a href="tel:8886145400" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">(888) 614-5400</a>
+          </p>
+        </div>
+
+        <!-- NYS Paid Family Leave -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">NYS Paid Family Leave</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">Bond with a new child, care for a seriously ill family member, or handle a qualifying military exigency. Employer-funded — not optional.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <strong style="color: var(--color-text);">12 weeks at 67%</strong> of avg weekly wage<br>
+            <strong style="color: var(--color-text);">Job-protected</strong> — employer must hold your position
+          </p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://dol.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">dol.ny.gov</a>
+          </p>
+        </div>
+
+        <!-- NYS Sick Leave -->
+        <div class="gold-card" style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <p class="gold-code-name">NYS Sick Leave</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6;">All NYS employers must provide paid sick leave. Accrues 1 hr per 30 hrs worked. Can be used for your own or a family member's illness.</p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <strong style="color: var(--color-text);">40–56 hours/year paid</strong> · All employers<br>
+            5–99 employees: 40 hrs · 100+: 56 hrs
+          </p>
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            <a href="https://dol.ny.gov" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">dol.ny.gov</a>
+            &nbsp;·&nbsp;
+            <a href="tel:8884697365" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">(888) 469-7365</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-info">
+        <p>Built by <strong>[COMMANDER]</strong> — [INSTITUTION]</p>
+        <p>Part of the MAE Protocol family</p>
+        <div class="footer-links">
+          <a href="#">Parent Protocol: MAE</a>
+          <a href="https://chatgpt.com/g/g-69cabc3745788191958cc80d45db0635-mae-purple-feather" target="_blank" rel="noopener">Try on ChatGPT</a>
+          <a href="https://github.com/[CALLSIGN]/My-Autonomous-Entity" target="_blank" rel="noopener">GitHub</a>
+          <a href="#dispatches">Dispatches</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        <span class="footer-version">Purple Feather v0.3</span>
+        <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ---- Dark/Light Mode Toggle ----
+    (function() {
+      const toggles = document.querySelectorAll('[data-theme-toggle]');
+      const root = document.documentElement;
+      let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      updateToggleIcons();
+
+      toggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+          theme = theme === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', theme);
+          updateToggleIcons();
+        });
+      });
+
+      function updateToggleIcons() {
+        const sunSVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+        const moonSVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+        toggles.forEach(function(toggle) {
+          toggle.innerHTML = theme === 'dark' ? sunSVG : moonSVG;
+          toggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode');
+        });
+      }
+    })();
+
+    // ---- Sticky Header Scroll Effect ----
+    (function() {
+      var header = document.getElementById('header');
+      var lastY = 0;
+      window.addEventListener('scroll', function() {
+        var y = window.scrollY;
+        if (y > 40) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        lastY = y;
+      }, { passive: true });
+    })();
+
+    // ---- Scroll Reveal (IntersectionObserver fallback) ----
+    (function() {
+      // If CSS scroll-driven animations are supported, skip JS reveals
+      if (CSS.supports && CSS.supports('animation-timeline', 'scroll()')) {
+        // Add fade-in class and remove js-reveal
+        document.querySelectorAll('.js-reveal').forEach(function(el) {
+          el.classList.remove('js-reveal');
+          el.classList.add('fade-in');
+          el.style.opacity = '';
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      document.querySelectorAll('.js-reveal').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+
+    // ---- Smooth Scroll for Anchor Links ----
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

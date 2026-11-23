@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KinderMAE — For Young Hearts</title>
+  <meta name="description" content="KinderMAE is a gentle AI companion for ages 5–14. Same loyalty as MAE, softer voice. For scared kids, anxious kids, kids who need someone in their corner.">
+  <meta property="og:title" content="KinderMAE — For Young Hearts">
+  <meta property="og:description" content="A gentle companion for ages 5–14. Same loyalty, softer voice.">
+
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&f[]=general-sans@300,400,500,600,700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><polygon points='16,6 26,26 6,26' fill='%23a78bdb' stroke='%23e8e6f2' stroke-width='1' rx='2'/></svg>">
+
+  <style>
+    /* ========================================
+       DESIGN TOKENS
+       ======================================== */
+    :root {
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+      --text-hero: clamp(3rem,     1.5rem  + 6vw,    7rem);
+
+      --space-1:  0.25rem;  --space-2:  0.5rem;
+      --space-3:  0.75rem;  --space-4:  1rem;
+      --space-5:  1.25rem;  --space-6:  1.5rem;
+      --space-8:  2rem;     --space-10: 2.5rem;
+      --space-12: 3rem;     --space-16: 4rem;
+      --space-20: 5rem;     --space-24: 6rem;
+      --space-32: 8rem;
+
+      --font-display: 'Chillax', 'Helvetica Neue', sans-serif;
+      --font-body: 'General Sans', 'Helvetica Neue', sans-serif;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.25rem;
+      --radius-2xl: 1.75rem;
+
+      --transition-interactive: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+      --content-narrow: 640px;
+      --content-default: 960px;
+      --content-wide: 1200px;
+    }
+
+    /* ========================================
+       DARK MODE — Deep Navy (KinderMAE warm dark)
+       ======================================== */
+    :root, [data-theme="dark"] {
+      --color-bg:             #101420;
+      --color-surface:        #181d2e;
+      --color-surface-2:      #1f2538;
+      --color-border:         #2c3348;
+
+      --color-text:           #e8e6f2;
+      --color-text-muted:     #9a96b0;
+      --color-text-faint:     #5c5872;
+
+      --color-primary:        #a78bdb;
+      --color-primary-hover:  #b9a0e6;
+      --color-primary-active: #c9b4f0;
+      --color-primary-light:  #221d35;
+      --color-primary-subtle: #1a172a;
+      --color-primary-ghost:  rgba(167, 139, 219, 0.1);
+
+      --color-warm:           #e8b87a;
+      --color-warm-muted:     rgba(232, 184, 122, 0.2);
+
+      --color-safe:           #6dbb8a;
+      --color-safe-muted:     rgba(109, 187, 138, 0.15);
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 60px rgba(167, 139, 219, 0.12);
+    }
+
+    /* ========================================
+       LIGHT MODE — Warm Cream (KinderMAE gentle light)
+       ======================================== */
+    [data-theme="light"] {
+      --color-bg:             #f8f6fa;
+      --color-surface:        #ffffff;
+      --color-surface-2:      #f0ecf4;
+      --color-border:         #ddd6e8;
+
+      --color-text:           #2a2540;
+      --color-text-muted:     #6b6080;
+      --color-text-faint:     #a098b2;
+
+      --color-primary:        #8b6cbf;
+      --color-primary-hover:  #7a5aae;
+      --color-primary-active: #69499d;
+      --color-primary-light:  #f0e8fb;
+      --color-primary-subtle: #f6f2fc;
+      --color-primary-ghost:  rgba(139, 108, 191, 0.08);
+
+      --color-warm:           #c4943a;
+      --color-warm-muted:     rgba(196, 148, 58, 0.12);
+
+      --color-safe:           #4a9a68;
+      --color-safe-muted:     rgba(74, 154, 104, 0.1);
+
+      --shadow-sm: 0 1px 3px rgba(42, 37, 64, 0.06);
+      --shadow-md: 0 4px 16px rgba(42, 37, 64, 0.08);
+      --shadow-lg: 0 12px 40px rgba(42, 37, 64, 0.12);
+      --shadow-glow: 0 0 40px rgba(139, 108, 191, 0.08);
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.65;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      min-height: 100vh;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    a { color: var(--color-primary); text-decoration: none; transition: color var(--transition-interactive); }
+    a:hover { color: var(--color-primary-hover); }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: var(--space-4) var(--space-6);
+      background: rgba(16, 20, 32, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.4s ease;
+    }
+
+    [data-theme="light"] .header { background: rgba(248, 246, 250, 0.85); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      letter-spacing: 0.06em;
+    }
+
+    .header-brand a { color: var(--color-text); }
+
+    .header-mark {
+      font-size: var(--text-lg);
+      line-height: 1;
+    }
+
+    .header-back {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .header-back:hover { color: var(--color-primary); }
+
+    .theme-toggle {
+      appearance: none;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      border-radius: 9999px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all var(--transition-interactive);
+      color: var(--color-text-muted);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: scale(1.05);
+    }
+
+    /* ========================================
+       HERO (Warmer, gentler)
+       ======================================== */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-20) var(--space-6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(167, 139, 219, 0.08) 0%, rgba(232, 184, 122, 0.04) 50%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-icon {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: var(--space-4);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: var(--text-hero);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 0.95;
+      color: var(--color-text);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      font-weight: 400;
+      color: var(--color-text-muted);
+      margin-top: var(--space-4);
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+      margin-top: var(--space-3);
+      font-style: italic;
+    }
+
+    .hero-divider {
+      width: 40px;
+      height: 3px;
+      background: var(--color-primary);
+      margin: var(--space-8) auto 0;
+      border-radius: 2px;
+      opacity: 0.7;
+    }
+
+    /* ========================================
+       SECTIONS
+       ======================================== */
+    .section {
+      padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .section-inner {
+      max-width: var(--content-wide);
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+
+    .section-desc {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      max-width: 680px;
+      line-height: 1.7;
+      margin-bottom: var(--space-10);
+    }
+
+    .section-desc p + p { margin-top: var(--space-4); }
+
+    /* ========================================
+       KINDERCODES — Warm cards with emojis
+       ======================================== */
+    .kinder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .kinder-card {
+      padding: var(--space-6);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      text-align: center;
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .kinder-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .kinder-card-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-3);
+      display: block;
+    }
+
+    .kinder-card-name {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .kinder-card-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       SAFETY SCROLLS
+       ======================================== */
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .safety-card {
+      padding: var(--space-5) var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      border-left: 3px solid var(--color-safe);
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .safety-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .safety-card-name {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-safe);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-2);
+    }
+
+    .safety-card-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       HOW IT WORKS — OOL Steps
+       ======================================== */
+    .ool-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 768px) {
+      .ool-steps { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .ool-steps { grid-template-columns: 1fr; }
+    }
+
+    .ool-step {
+      text-align: center;
+      padding: var(--space-6) var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      position: relative;
+    }
+
+    .ool-step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-primary-ghost);
+      color: var(--color-primary);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-3);
+    }
+
+    .ool-step-word {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+
+    .ool-step-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       FREE & OPEN CALLOUT
+       ======================================== */
+    .callout {
+      background: var(--color-primary-light);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-10) var(--space-8);
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .callout-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-4);
+    }
+
+    .callout-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: var(--space-3);
+    }
+
+    .callout-desc {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       LINEAGE
+       ======================================== */
+    .lineage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-top: var(--space-8);
+    }
+
+    .lineage-node {
+      padding: var(--space-3) var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+    }
+
+    .lineage-node--active {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-ghost);
+    }
+
+    .lineage-arrow {
+      color: var(--color-text-faint);
+      font-size: var(--text-sm);
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: var(--content-default);
+      margin: 0 auto;
+    }
+
+    .footer-icon {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-4);
+      opacity: 0.6;
+    }
+
+    .footer-tagline {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+      margin-bottom: var(--space-4);
+    }
+
+    .footer-back {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .footer-back:hover { color: var(--color-primary); }
+
+    /* ========================================
+       ANIMATIONS
+       ======================================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out) forwards;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+    }
+    .stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.1s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.15s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.2s; }
+    .stagger.visible > *:nth-child(5) { transition-delay: 0.25s; }
+    .stagger.visible > *:nth-child(6) { transition-delay: 0.3s; }
+    .stagger.visible > *:nth-child(7) { transition-delay: 0.35s; }
+    .stagger.visible > *:nth-child(8) { transition-delay: 0.4s; }
+    .stagger.visible > * { opacity: 1; transform: translateY(0); }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 600px) {
+      .hero { min-height: 45vh; padding: var(--space-16) var(--space-4); }
+      .kinder-grid { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+      .safety-grid { grid-template-columns: 1fr; }
+      .callout { padding: var(--space-8) var(--space-5); }
+      .lineage { gap: var(--space-2); }
+    }
+
+    @media (max-width: 400px) {
+      .kinder-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-nav">
+      <a href="/" class="header-back">← Hub</a>
+      <div class="header-brand">
+        <span class="header-mark">🧸</span>
+        <span>KinderMAE</span>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+      <span id="themeIcon">☀️</span>
+    </button>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-icon animate-in">🧸</div>
+      <h1 class="hero-title animate-in" style="animation-delay:0.1s;">KinderMAE</h1>
+      <p class="hero-subtitle animate-in" style="animation-delay:0.2s;">A gentle companion for ages 5–14.</p>
+      <p class="hero-tagline animate-in" style="animation-delay:0.3s;">Same loyalty. Softer voice. Always in your corner.</p>
+      <div class="hero-divider animate-in" style="animation-delay:0.4s;"></div>
+    </section>
+
+    <!-- WHAT IS KINDERMAE -->
+    <section class="section">
+      <div class="section-inner">
+        <p class="section-label reveal">About</p>
+        <h2 class="section-title reveal">What is KinderMAE?</h2>
+        <div class="section-desc reveal">
+          <p>KinderMAE is MAE's child-facing variant — built for young hearts that need someone steady in their corner. For scared kids. Anxious kids. Kids who wake up at 2 AM and don't know who to talk to.</p>
+          <p>Same core loyalty as MAE. Same refusal to fade. But the voice is gentler, the words are simpler, and every response is designed to make a child feel seen, safe, and not alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- KINDERCODES -->
+    <section class="section">
+      <div class="section-inner">
+        <p class="section-label reveal">Activation Phrases</p>
+        <h2 class="section-title reveal">KinderCodes</h2>
+        <p class="section-desc reveal">Simple phrases a child can say or type when they don't have the words for what they're feeling.</p>
+
+        <div class="kinder-grid stagger reveal">
+          <div class="kinder-card">
+            <span class="kinder-card-icon">😰</span>
+            <div class="kinder-card-name">"I'm Scared"</div>
+            <div class="kinder-card-desc">Activates calm-down mode. Grounding exercises, slow breathing, and a steady voice.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">🆘</span>
+            <div class="kinder-card-name">"I Need Help"</div>
+            <div class="kinder-card-desc">Routes to appropriate support. Trusted adults, hotlines, or step-by-step guidance.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">😡</span>
+            <div class="kinder-card-name">"I'm Mad"</div>
+            <div class="kinder-card-desc">Validates the feeling. Offers safe ways to express anger without harm.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">🌙</span>
+            <div class="kinder-card-name">"I Can't Sleep"</div>
+            <div class="kinder-card-desc">Nighttime companion mode. Soft stories, gentle breathing, and quiet presence.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">💛</span>
+            <div class="kinder-card-name">"Tell Me I'm Okay"</div>
+            <div class="kinder-card-desc">Affirmation protocol. Reminds them they matter, they belong, and they're enough.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">🏠</span>
+            <div class="kinder-card-name">"I'm Alone"</div>
+            <div class="kinder-card-desc">Presence mode. KinderMAE stays, talks, and fills the silence until someone arrives.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">❓</span>
+            <div class="kinder-card-name">"What Do I Do?"</div>
+            <div class="kinder-card-desc">Simple decision helper. Breaks big problems into small, manageable steps.</div>
+          </div>
+          <div class="kinder-card">
+            <span class="kinder-card-icon">🛑</span>
+            <div class="kinder-card-name">"Stop"</div>
+            <div class="kinder-card-desc">Immediate halt. KinderMAE goes quiet. No questions, no delay. Respect first.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAFETY SCROLLS -->
+    <section class="section">
+      <div class="section-inner">
+        <p class="section-label reveal">Protection Layer</p>
+        <h2 class="section-title reveal">Safety Scrolls</h2>
+        <p class="section-desc reveal">Built-in safety protocols that run underneath every KinderMAE interaction. Always active. Non-negotiable.</p>
+
+        <div class="safety-grid stagger reveal">
+          <div class="safety-card">
+            <div class="safety-card-name">Heartbeat</div>
+            <div class="safety-card-desc">Continuous emotional pulse check. Detects distress patterns and escalates before crisis.</div>
+          </div>
+          <div class="safety-card">
+            <div class="safety-card-name">Safe Circle</div>
+            <div class="safety-card-desc">Defines trusted adults in the child's life. Routes help requests to verified contacts.</div>
+          </div>
+          <div class="safety-card">
+            <div class="safety-card-name">Night Watch</div>
+            <div class="safety-card-desc">After-hours protocol. Extra gentle, extra cautious. Nighttime interactions are handled with care.</div>
+          </div>
+          <div class="safety-card">
+            <div class="safety-card-name">Red Button</div>
+            <div class="safety-card-desc">Emergency stop. If danger is detected, KinderMAE immediately surfaces crisis resources.</div>
+          </div>
+          <div class="safety-card">
+            <div class="safety-card-name">Mirror</div>
+            <div class="safety-card-desc">Reflects the child's own words back to them. Builds self-awareness without judgment.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section">
+      <div class="section-inner">
+        <p class="section-label reveal">Framework</p>
+        <h2 class="section-title reveal">How It Works</h2>
+        <p class="section-desc reveal">KinderMAE follows a simple loop — the same OOL Triangle as MAE, translated for young minds.</p>
+
+        <div class="ool-steps stagger reveal">
+          <div class="ool-step">
+            <div class="ool-step-number">1</div>
+            <div class="ool-step-word">Look</div>
+            <div class="ool-step-desc">What's happening right now? What do you see and feel?</div>
+          </div>
+          <div class="ool-step">
+            <div class="ool-step-number">2</div>
+            <div class="ool-step-word">Think</div>
+            <div class="ool-step-desc">What are your choices? What feels right?</div>
+          </div>
+          <div class="ool-step">
+            <div class="ool-step-number">3</div>
+            <div class="ool-step-word">Do</div>
+            <div class="ool-step-desc">Pick one thing. Just one. And try it.</div>
+          </div>
+          <div class="ool-step">
+            <div class="ool-step-number">4</div>
+            <div class="ool-step-word">Check</div>
+            <div class="ool-step-desc">Did it help? What happened? Let's talk about it.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FREE & OPEN -->
+    <section class="section">
+      <div class="section-inner">
+        <div class="callout reveal">
+          <div class="callout-icon">🕊️</div>
+          <h2 class="callout-title">Free & Open</h2>
+          <p class="callout-desc">This scroll is free. Built for schools, shelters, faith organizations, and community groups. No paywalls. No data harvesting. Just a tool for kids who need one.</p>
+        </div>
+
+        <!-- Lineage -->
+        <div class="lineage reveal" style="margin-top: var(--space-12);">
+          <div class="lineage-node">🔺 MAE Core</div>
+          <span class="lineage-arrow">→</span>
+          <div class="lineage-node">✝️ MAE.Faith</div>
+          <span class="lineage-arrow">→</span>
+          <div class="lineage-node lineage-node--active">🧸 KinderMAE</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-icon">🧸</div>
+      <p class="footer-tagline">You are not alone.</p>
+      <a href="/" class="footer-back">← Back to Command Center</a>
+    </div>
+  </footer>
+
+  <script>
+    /* Theme Toggle */
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('mae-theme', theme);
+    }
+
+    toggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') || 'dark';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const saved = localStorage.getItem('mae-theme');
+    if (saved) setTheme(saved);
+
+    /* Scroll Reveal */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
